@@ -42,7 +42,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
-          path: output/
+          path: |
+            output/results.json
+            output/model.pkl
 
   deploy:
     runs-on: ubuntu-latest
@@ -69,9 +71,9 @@ jobs:
           python - << 'PY'
           import json, os
 
-          m = json.load(open("output/results.json"))
+          # IMPORTANT: file is now in ROOT, not output/
+          m = json.load(open("results.json"))
 
-          # NOTE: keys must match train.py (case-sensitive)
           cur_r2  = float(m["R2"])
           cur_mse = float(m["MSE"])
 
