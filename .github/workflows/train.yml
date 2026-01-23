@@ -27,8 +27,7 @@ jobs:
         run: mkdir -p output
 
       - name: Train model
-        run: |
-          python train.py
+        run: python train.py
 
       - name: Log metrics
         run: |
@@ -38,7 +37,8 @@ jobs:
           print("metrics:", m)
           PY
 
-      - name: Upload artifacts
+      # 🔹 TRAIN ARTIFACT (main one)
+      - name: Upload trained model artifacts
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
@@ -54,7 +54,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download artifacts
+      - name: Download trained model artifacts
         uses: actions/download-artifact@v4
         with:
           name: trained-model
@@ -71,7 +71,7 @@ jobs:
           python - << 'PY'
           import json, os
 
-          # IMPORTANT: file is now in ROOT, not output/
+          # files are in ROOT after download
           m = json.load(open("results.json"))
 
           cur_r2  = float(m["R2"])
@@ -88,7 +88,7 @@ jobs:
               out.write(f"cur_mse={cur_mse}\n")
 
           print("Current:", cur_r2, cur_mse)
-          print("Best:   ", best_r2, best_mse)
+          print("Best:", best_r2, best_mse)
           print("Improved?", improved)
           PY
         env:
@@ -115,6 +115,15 @@ jobs:
           tags: |
             srideekshaa/wine_predict_2022bcs0205:latest
             srideekshaa/wine_predict_2022bcs0205:${{ github.sha }}
+
+      # 🔹 OPTIONAL: re-upload artifact so it also appears under DEPLOY (for screenshots)
+      - name: Upload trained model again (for records)
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-model-deploy
+          path: |
+            results.json
+            model.pkl
 
       - name: Update BEST_R2 and BEST_MSE
         run: |
