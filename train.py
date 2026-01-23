@@ -34,7 +34,8 @@ print(f"MSE: {mse}")
 print(f"R2: {r2}")
 
 # Save model
-joblib.dump(model, "output/model.pkl")
+joblib.dump(model, "model.pkl")
+
 
 # Save results
 results = {
