@@ -18,10 +18,13 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install deps
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Create output directory
+        run: mkdir -p output
 
       - name: Train model
         run: |
@@ -39,9 +42,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
-          path: |
-            output/results.json
-            output/model.pkl
+          path: output/
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,7 +56,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: trained-model
-          path: output/
+          path: .
+
+      - name: Install Python deps for deploy
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
 
       - name: Compare metrics with baseline
         id: gate
@@ -64,8 +70,10 @@ jobs:
           import json, os
 
           m = json.load(open("output/results.json"))
-          cur_r2  = float(m["r2"])
-          cur_mse = float(m["mse"])
+
+          # NOTE: keys must match train.py (case-sensitive)
+          cur_r2  = float(m["R2"])
+          cur_mse = float(m["MSE"])
 
           best_r2  = float(os.environ["BEST_R2"])
           best_mse = float(os.environ["BEST_MSE"])
