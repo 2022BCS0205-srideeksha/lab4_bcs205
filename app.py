@@ -6,7 +6,8 @@ import numpy as np
 app = FastAPI(title="Wine Quality Prediction API")
 
 # Load trained model
-model = joblib.load("model/model.pkl")
+model = joblib.load("model.pkl")
+
 
 # Input schema (named fields – REQUIRED for lab)
 class WineInput(BaseModel):
