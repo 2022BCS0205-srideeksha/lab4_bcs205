@@ -35,7 +35,7 @@ print(f"MSE: {mse}")
 print(f"R2: {r2}")
 os.makedirs("output", exist_ok=True)
 # Save model
-joblib.dump(model, "model.pkl")
+joblib.dump(model, "output/model.pkl")
 
 
 # Save results
