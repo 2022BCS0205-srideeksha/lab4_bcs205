@@ -4,10 +4,11 @@ pipeline {
     stages {
 
         stage('Pull Code') {
-            steps {
-                git 'https://github.com/2022BCS0205-srideeksha/lab4_bcs205.git'
-            }
-        }
+    steps {
+        git branch: 'main',
+            url: 'https://github.com/2022BCS0205-srideeksha/lab4_bcs205.git'
+    }
+}
 
         stage('Train Model') {
             steps {
