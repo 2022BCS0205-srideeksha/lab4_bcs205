@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
@@ -32,7 +33,7 @@ r2 = r2_score(y_test, y_pred)
 
 print(f"MSE: {mse}")
 print(f"R2: {r2}")
-
+os.makedirs("output", exist_ok=True)
 # Save model
 joblib.dump(model, "model.pkl")
 
