@@ -1,36 +1,30 @@
 pipeline {
-agent any
+    agent any
 
-```
-stages {
+    stages {
 
-    stage('Clone Repo') {
-        steps {
-            git 'https://github.com/2022BCS0205-srideeksha/lab4_bcs205.git'
+        stage('Pull Code') {
+            steps {
+                git 'https://github.com/2022BCS0205-srideeksha/lab4_bcs205.git'
+            }
+        }
+
+        stage('Train Model') {
+            steps {
+                sh 'python train.py'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t srideekshaa/wine_predict_2022bcs0205:latest .'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh 'docker run -d -p 8001:8000 srideekshaa/wine_predict_2022bcs0205:latest'
+            }
         }
     }
-
-    stage('Install & Train') {
-        steps {
-            bat 'pip install -r requirements.txt'
-            bat 'python train.py'
-        }
-    }
-
-    stage('Build Docker Image') {
-        steps {
-            bat 'docker build -t wine_predict_2022bcs0205 .'
-        }
-    }
-
-    stage('Run Container') {
-        steps {
-            bat 'docker stop wine_container || echo no container'
-            bat 'docker rm wine_container || echo no container'
-            bat 'docker run -d -p 8000:8000 --name wine_container wine_predict_2022bcs0205'
-        }
-    }
-}
-```
-
 }
