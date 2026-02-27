@@ -37,7 +37,7 @@ pipeline {
             steps {
                 sh '''
                 STATUS=$(curl -s -o response.json -w "%{http_code}" \
-                -X POST http://localhost:8000/predict \
+                -X POST http://host.docker.internal:8000/predict \
                 -H "Content-Type: application/json" \
                 -d @valid.json)
 
@@ -56,7 +56,7 @@ pipeline {
             steps {
                 sh '''
                 STATUS=$(curl -s -o invalid_response.json -w "%{http_code}" \
-                -X POST http://localhost:8000/predict \
+                -X POST http://host.docker.internal:8000/predict \
                 -H "Content-Type: application/json" \
                 -d @invalid.json)
 
